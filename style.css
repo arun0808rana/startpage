@@ -30,8 +30,8 @@ body {
   justify-content: center;
 }
 
-main {
-}
+/* main {
+} */
 
 main > .upper-container {
   display: flex;
