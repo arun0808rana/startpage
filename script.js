@@ -112,3 +112,6 @@ function handleWeatherForecast() {
 }
 
 handleWeatherForecast();
+
+// 791d1fbf813e3930e1d592e30bafcab7
+// api.openweathermap.org/data/2.5/forecast/daily?lat=28.41&lon=77.04&appid=791d1fbf813e3930e1d592e30bafcab7
