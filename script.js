@@ -1,9 +1,75 @@
-document.onkeyup = e => {
-    const searchBar = document.querySelector('.search-bar');
-    searchBar.focus();
+let lastKey = '';
+
+const searchBar = document.querySelector('.search-bar');
+const suggestions = document.querySelector('.suggestions');
+
+let hintCounter = 0;
+
+// typing effect for search bar's placeholder
+(async () => {
+    const hints = [
+        'Press / to search',
+        ':git awesome startpage',
+        ':yt primeagen',
+        ':duck top 10 ott platforms'
+    ]
+
+    while (true) {
+        searchBar.placeholder = '';
+        const index = (++hintCounter) % hints.length;
+        let letterCounter = 0;
+        // add typing effect for placeholder
+        while (letterCounter < hints[index].length) {
+            searchBar.placeholder = searchBar.placeholder + hints[index][letterCounter];
+            ++letterCounter;
+            await new Promise(resolve => setTimeout(resolve, 80));
+        }
+        // wait before erasing placeholder
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        // erase placeholder to make way for the new hint
+        while (letterCounter >= 0) {
+            searchBar.placeholder = searchBar.placeholder.slice(0, letterCounter);
+            --letterCounter;
+            await new Promise(resolve => setTimeout(resolve, 50));
+        }
+    }
+})()
+
+searchBar.onkeyup = event => {
+    if (searchBar.value === '') {
+        suggestions.style.display = 'none';
+        searchBar.classList.add('border-bottom');
+        return;
+    }
+
+    if (searchBar.value[0] == ':') {
+        suggestions.style.display = 'block';
+        searchBar.classList.remove('border-bottom');
+    }
+
+    if (event.key === 'ArrowDown') {
+        const hotkeys = [
+            ':git',
+            ':yt',
+            ':ytp',
+            ':duck',
+            ':font'
+        ];
+        const activeSuggestionItem = suggestions.querySelector('.suggestion_item.active');
+        const activeSuggestionItemDataID = activeSuggestionItem.getAttribute('data-id');
+        const activeHotkeyIndex = hotkeys.findIndex(hotkey => hotkey === activeSuggestionItemDataID);
+        const nextActiveHotkeyIndex = activeHotkeyIndex + 1;
+        searchBar.value = hotkeys[nextActiveHotkeyIndex % hotkeys.length];
+
+        activeSuggestionItem.classList.remove('active');
+        const newActiveSuggestionItem = suggestions.children[nextActiveHotkeyIndex % hotkeys.length];
+        newActiveSuggestionItem.classList.add('active');
+
+    }
+
+    // Todo: add ArrowUp functionality
 }
 
-let lastKey = '';
 document.onkeydown = e => {
     const activeEl = document.activeElement;
     if (activeEl.tagName === 'INPUT') {
@@ -14,7 +80,19 @@ document.onkeydown = e => {
         activeEl.click();
     }
 
+    if (e.key === '/') {
+        searchBar.focus();
+        e.preventDefault();
+        return;
+    }
+
+    if (e.key === ':') {
+        searchBar.focus();
+        return;
+    }
+
     let keyformation = lastKey + e.key.toLowerCase();
+
     switch (keyformation) {
         case 'yt':
             window.open('https://www.youtube.com/', "_self")
@@ -23,21 +101,21 @@ document.onkeydown = e => {
             window.open('https://open.spotify.com/', "_self")
             break;
         case 'an':
-            window.open('https://9anime.vc/', "_self")
+            window.open('https://zoro.to/home', "_self")
             break;
         case 'me':
             window.open('https://medium.com/', "_self")
             break;
         case 'mr':
-            window.open('https://mangareader.to/', "_self")
+            window.open('https://mangareader.to/home', "_self")
             break;
         case 'gi':
             window.open('https://github.com/', "_self")
             break;
-        case 'do':
+        case 'dt':
             window.open('https://dev.to/', "_self")
             break;
-        case 'ha':
+        case 'hn':
             window.open('https://hashnode.com/', "_self")
             break;
         case 'no':
@@ -55,8 +133,11 @@ document.onkeydown = e => {
         case 'fo':
             window.open('https://fontawesome.com/icons', "_self")
             break;
-        case 'gi':
+        case 'gf':
             window.open('https://fonts.google.com/', "_self")
+            break;
+        case 'fi':
+            window.open('https://figma.com/', "_self")
             break;
         case 'li':
             window.open('https://www.linkedin.com/', "_self")
@@ -98,20 +179,38 @@ document.onkeydown = e => {
     lastKey = e.key.toLowerCase();
 }
 
-function handleWeatherForecast() {
-    const days = Array.from(document.querySelectorAll('.day'));
-    const DAYS_NAME = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    // geting todays day in form of number from 0 to 7
-    let dayIndex = new Date().getDay();
 
-    days.forEach(day => {
-        day.innerText = DAYS_NAME[dayIndex % days.length];
-        ++dayIndex;
-    })
+function handleSumbit(event) {
+    event.preventDefault();
+    const query = searchBar.value;
+    const [prefix] = query.split(' ');
 
+    if (prefix[0] === ':') {
+        let searchQuery = query.split(' ').slice(1).join(' ');
+        searchQuery = encodeURIComponent(searchQuery);
+        switch (prefix) {
+            case ':git':
+                window.open(`https://github.com/search?q=${searchQuery}&type=repositories&s=stars&o=desc`, "_self")
+                break;
+            case ':yt':
+                window.open(`https://www.youtube.com/results?search_query=${searchQuery}`, "_self")
+                break;
+            case ':ytp':
+                window.open(`https://www.youtube.com/results?search_query=${searchQuery}&sp=EgIQAw%253D%253D`, "_self")
+                break;
+            case ':duck':
+                window.open(`https://duckduckgo.com/?q=${searchQuery}`, "_self")
+                break;
+            case ':font':
+                window.open(`https://fonts.google.com/?query=${searchQuery}`, "_self")
+                break;
+
+            default:
+                window.open(`https://www.google.com/search?q=${searchQuery}`, "_self")
+                break;
+        }
+    } else {
+        let searchQuery = encodeURIComponent(query);
+        window.open(`https://www.google.com/search?q=${searchQuery}`, "_self")
+    }
 }
-
-handleWeatherForecast();
-
-// 791d1fbf813e3930e1d592e30bafcab7
-// api.openweathermap.org/data/2.5/forecast/daily?lat=28.41&lon=77.04&appid=791d1fbf813e3930e1d592e30bafcab7
