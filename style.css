@@ -76,7 +76,7 @@ main>.upper-container {
   caret-color: currentcolor;
 }
 
-.search-bar.border-bottom{
+.search-bar.border-bottom {
   border-bottom: 2px solid var(--SECONDARY);
 }
 
@@ -202,7 +202,15 @@ input:-webkit-autofill {
   display: flex;
 }
 
-.suggestion_item.active{
+.suggestion_item:first-child {
+  border-radius: 8px 8px 0 0;
+}
+
+.suggestion_item:last-child{
+  border-radius: 0 0 8px 8px;
+}
+
+.suggestion_item.active {
   background: #e7d7ad;
 }
 

@@ -67,7 +67,28 @@ searchBar.onkeyup = event => {
 
     }
 
-    // Todo: add ArrowUp functionality
+    if(event.key === 'ArrowUp'){
+        const hotkeys = [
+            ':git',
+            ':yt',
+            ':ytp',
+            ':duck',
+            ':font'
+        ];
+
+        const activeSuggestionItem = suggestions.querySelector('.suggestion_item.active');
+        const activeSuggestionItemDataID = activeSuggestionItem.getAttribute('data-id');
+        const activeHotkeyIndex = hotkeys.findIndex(hotkey => hotkey === activeSuggestionItemDataID);
+        let nextActiveHotkeyIndex = activeHotkeyIndex - 1;
+        if(nextActiveHotkeyIndex < 0){
+            nextActiveHotkeyIndex = hotkeys.length - 1;
+        }
+        searchBar.value = hotkeys[nextActiveHotkeyIndex % hotkeys.length];
+
+        activeSuggestionItem.classList.remove('active');
+        const newActiveSuggestionItem = suggestions.children[nextActiveHotkeyIndex % hotkeys.length];
+        newActiveSuggestionItem.classList.add('active');        
+    }
 }
 
 document.onkeydown = e => {
