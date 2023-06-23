@@ -2,6 +2,7 @@ const api = `https://api.jikan.moe/v4/seasons/upcoming`;
 const animeBoxTemplate = document.querySelector(".anime_box_template");
 const animeGrid = document.querySelector(".grid");
 const TWELVE_HOURS_IN_MILLI_SECONDS = 12 * 60 * 60 * 1000;
+const zoroURL = `https://zoro.to/search?keyword=`;
 
 main();
 
@@ -51,6 +52,7 @@ async function renderGrid(payload) {
     animeBoxClone.querySelector(".preview_img").src =
       anime.images.webp.image_url;
     animeBoxClone.querySelector(".title").textContent = anime.title;
+    animeBoxClone.querySelector(".title").setAttribute('href', `${zoroURL}${encodeURIComponent(anime.title)}`);
     animeBoxClone.querySelector(".airing_from").textContent =
       "Airing From: " + new Date(anime.aired.from).toDateString();
     animeBoxClone.querySelector(".broadcast_time").textContent =
