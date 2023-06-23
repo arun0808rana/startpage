@@ -1,0 +1,50 @@
+*{
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #222222;
+  display: flex;
+  justify-content: center;
+  font-family: monospace;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.anime_box {
+  width: 100%;
+  max-width: 256px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 16px;
+  border: 1px solid #808080;
+  padding: 8px auto;
+}
+
+.anime_details {
+  width: 100%;
+  max-width: 225px;
+  color: white;
+  margin: 16px auto;
+}
+
+.title {
+  width: 100%;
+  max-width: 225px;
+  color: #df43f1;
+}
+
+.airing_from{
+  margin: 4px auto;
+  color: rgb(201 105 36);
+}
+
+.broadcast_time{
+  color: rgb(54 148 230);
+  margin-bottom: 4px;
+}
